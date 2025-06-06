@@ -18,8 +18,7 @@ public class FileRepositorySql2o implements FileRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM files WHERE id = :id")
                     .addParameter("id", id);
-            var file = query.executeAndFetchFirst(File.class);
-            return Optional.ofNullable(file);
+            return Optional.ofNullable(query.executeAndFetchFirst(File.class));
         }
     }
 }
