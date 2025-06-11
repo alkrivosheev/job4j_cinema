@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<div th:insert="~{fragments/header :: header}"></div>
+<body>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Добро пожаловать в наш кинотеатр!</h1>
+    <div class="mb-5">
+        <h2 class="mb-3">Наши фильмы</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="film : ${films}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${film.name}">Название фильма</h5>
+                        <p class="card-text">
+                            <strong>Жанр:</strong> <span th:text="${film.genre}">Жанр</span><br>
+                            <strong>Год:</strong> <span th:text="${film.year}">Год</span><br>
+                            <strong>Возраст:</strong> <span th:text="${film.minimalAge}+'+'">0+</span><br>
+                            <strong>Длительность:</strong> <span th:text="${film.durationInMinutes}+' мин.'">0 мин.</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Секция с залами -->
+    <div>
+        <h2 class="mb-3">Наши залы</h2>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col" th:each="hall : ${halls}">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title" th:text="${hall.name}">Название зала</h5>
+                        <p class="card-text">
+                            <strong>Рядов:</strong> <span th:text="${hall.rowCount}">0</span><br>
+                            <strong>Мест в ряду:</strong> <span th:text="${hall.placeCount}">0</span><br>
+                            <strong>Всего мест:</strong> <span th:text="${hall.rowCount * hall.placeCount}">0</span>
+                        </p>
+                        <p class="card-text" th:text="${hall.description}">Описание зала</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -19,7 +19,7 @@ public class HallRepositorySql2o implements HallRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM halls WHERE id = :id")
                     .addParameter("id", id);
-            var hall = query.executeAndFetchFirst(Hall.class);
+            var hall = query.setColumnMappings(Hall.COLUMN_MAPPING).executeAndFetchFirst(Hall.class);
             return Optional.ofNullable(hall);
         }
     }
@@ -28,7 +28,7 @@ public class HallRepositorySql2o implements HallRepository {
     public Collection<Hall> findAll() {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM halls");
-            return query.executeAndFetch(Hall.class);
+            return query.setColumnMappings(Hall.COLUMN_MAPPING).executeAndFetch(Hall.class);
         }
     }
 }

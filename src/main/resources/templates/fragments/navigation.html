@@ -1,0 +1,23 @@
+<html xmlns:th="http://www.thymeleaf.org">
+<nav th:fragment="navigation" class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">Job4jCinema</a>
+        <div class="collapse navbar-collapse">
+            <div class="navbar-nav me-auto">
+                <a class="nav-item nav-link active" href="/">Главная</a>
+                <a class="nav-item nav-link" th:href="@{/}">Кинотека</a>
+                <a class="nav-item nav-link" th:href="@{/}">Киносеансы</a>
+                <a class="nav-item nav-link" th:href="@{/}">Купить билеты</a>
+<!--                <a class="nav-item nav-link" th:href="@{/candidates/create}">Создать резюме</a>-->
+            </div>
+<!--            <div class="d-flex" th:if="${user.name == 'Гость'}">-->
+                <a class="nav-link text-secondary me-3" th:href="@{/register}">Регистрация</a>
+                <a class="nav-link text-secondary" th:href="@{/login}">Войти</a>
+<!--            </div>-->
+<!--            <div class="d-flex" th:if="${user.name != 'Гость'}">-->
+<!--                <a class="nav-link text-secondary me-3" href="#" th:text="${user.name}"></a>-->
+<!--                <a class="nav-link text-secondary" th:href="@{/users/logout}">Выйти</a>-->
+<!--            </div>-->
+        </div>
+    </div>
+</nav>

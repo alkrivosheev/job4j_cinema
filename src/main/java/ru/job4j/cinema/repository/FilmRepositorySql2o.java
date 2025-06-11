@@ -19,7 +19,7 @@ public class FilmRepositorySql2o implements FilmRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM films WHERE id = :id")
                     .addParameter("id", id);
-            var film = query.executeAndFetchFirst(Film.class);
+            var film = query.setColumnMappings(Film.COLUMN_MAPPING).executeAndFetchFirst(Film.class);
             return Optional.ofNullable(film);
         }
     }
@@ -28,7 +28,7 @@ public class FilmRepositorySql2o implements FilmRepository {
     public Collection<Film> findAll() {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM films");
-            return query.executeAndFetch(Film.class);
+            return query.setColumnMappings(Film.COLUMN_MAPPING).executeAndFetch(Film.class);
         }
     }
 }
