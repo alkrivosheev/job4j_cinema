@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Кинотека</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .film-card {
+            transition: transform 0.3s;
+            margin-bottom: 20px;
+        }
+        .film-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 15px rgba(0,0,0,0.2);
+        }
+        .film-poster {
+            height: 400px;
+            object-fit: cover;
+        }
+        .film-age-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+<div th:replace="~{fragments/navigation :: navigation}"></div>
+
+<div class="container mt-4">
+    <h1 class="text-center mb-4">Кинотека</h1>
+
+    <div class="mb-4">
+        <h3>Фильтр</h3>
+        <div class="btn-group" role="group">
+            <a href="/kinoteka" class="btn btn-outline-primary">Все</a>
+            <a th:each="genre : ${genres}"
+               th:href="@{/kinoteka(genreId=${genre.id})}"
+               th:text="${genre.name}"
+               class="btn btn-outline-primary">
+            </a>
+        </div>
+    </div>
+
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <div class="col" th:each="film : ${films}">
+            <div class="card film-card">
+                <img th:src="@{'/files/' + ${film.fileName}}"
+                     class="card-img-top film-poster">
+
+                <span class="badge bg-danger film-age-badge"
+                      th:text="${film.minimalAge}+'+'">
+                </span>
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${film.name}"></h5>
+                    <p class="card-text">
+                        <strong>Жанр:</strong> <span th:text="${film.genre}"></span><br>
+                        <strong>Год:</strong> <span th:text="${film.year}"></span><br>
+                        <strong>Длительность:</strong>
+                        <span th:text="${film.durationInMinutes}+' мин.'"></span>
+                    </p>
+                    <p class="card-text" th:text="${film.description}"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<div th:insert="~{fragments/footer :: footer}"></div>
+</body>
+</html>

@@ -17,4 +17,5 @@ public class FilmDto {
     private int minimalAge;
     private int durationInMinutes;
     private String genre;
+    private String fileName;
 }
