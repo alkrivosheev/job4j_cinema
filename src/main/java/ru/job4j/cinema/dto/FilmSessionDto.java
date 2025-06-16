@@ -17,5 +17,8 @@ public class FilmSessionDto {
     private String hallName;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private String duration;
     private int price;
+    private int filmId;
+    private int hallId;
 }

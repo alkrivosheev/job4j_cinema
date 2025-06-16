@@ -13,5 +13,7 @@ public interface FilmSessionService {
 
     Collection<FilmSessionDto> findAllWithFilmAndHall();
 
+    Optional<FilmSessionDto> findByIdWithFilmAndHall(int id);
+
     Collection<FilmSession> findByFilmId(int filmId);
 }

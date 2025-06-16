@@ -31,4 +31,22 @@ public class HallRepositorySql2o implements HallRepository {
             return query.setColumnMappings(Hall.COLUMN_MAPPING).executeAndFetch(Hall.class);
         }
     }
+
+    @Override
+    public int getRowCount(int hallId) {
+        try (var connection = sql2o.open()) {
+            var query = connection.createQuery("SELECT row_count FROM halls WHERE id = :hallId")
+                    .addParameter("hallId", hallId);
+            return query.executeScalar(Integer.class);
+        }
+    }
+
+    @Override
+    public int getPlaceCount(int hallId) {
+        try (var connection = sql2o.open()) {
+            var query = connection.createQuery("SELECT place_count FROM halls WHERE id = :hallId")
+                    .addParameter("hallId", hallId);
+            return query.executeScalar(Integer.class);
+        }
+    }
 }

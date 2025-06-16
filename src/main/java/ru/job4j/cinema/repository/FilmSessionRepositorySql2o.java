@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Repository
 public class FilmSessionRepositorySql2o implements FilmSessionRepository {
+
     private final Sql2o sql2o;
 
     public FilmSessionRepositorySql2o(Sql2o sql2o) {
@@ -19,7 +20,7 @@ public class FilmSessionRepositorySql2o implements FilmSessionRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM film_sessions WHERE id = :id")
                     .addParameter("id", id);
-            var session = query.executeAndFetchFirst(FilmSession.class);
+            var session = query.setColumnMappings(FilmSession.COLUMN_MAPPING).executeAndFetchFirst(FilmSession.class);
             return Optional.ofNullable(session);
         }
     }
@@ -28,7 +29,7 @@ public class FilmSessionRepositorySql2o implements FilmSessionRepository {
     public Collection<FilmSession> findAll() {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM film_sessions ORDER BY start_time");
-            return query.executeAndFetch(FilmSession.class);
+            return query.setColumnMappings(FilmSession.COLUMN_MAPPING).executeAndFetch(FilmSession.class);
         }
     }
 
@@ -37,7 +38,7 @@ public class FilmSessionRepositorySql2o implements FilmSessionRepository {
         try (var connection = sql2o.open()) {
             var query = connection.createQuery("SELECT * FROM film_sessions WHERE film_id = :filmId ORDER BY start_time")
                     .addParameter("filmId", filmId);
-            return query.executeAndFetch(FilmSession.class);
+            return query.setColumnMappings(FilmSession.COLUMN_MAPPING).executeAndFetch(FilmSession.class);
         }
     }
 }

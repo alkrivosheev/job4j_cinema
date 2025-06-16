@@ -8,6 +8,7 @@ import java.util.Optional;
 
 @Repository
 public class FilmRepositorySql2o implements FilmRepository {
+
     private final Sql2o sql2o;
 
     public FilmRepositorySql2o(Sql2o sql2o) {
