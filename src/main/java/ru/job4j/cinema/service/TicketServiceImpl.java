@@ -10,25 +10,35 @@ import java.util.Optional;
 @Service
 @AllArgsConstructor
 public class TicketServiceImpl implements TicketService {
+
     private final TicketRepository ticketRepository;
 
     @Override
     public Optional<Ticket> save(Ticket ticket) {
-        return ticketRepository.save(ticket);
+        try {
+            if (!isSeatAvailable(ticket.getSessionId(),
+                    ticket.getRowNumber(),
+                    ticket.getPlaceNumber())) {
+                return Optional.empty();
+            }
+            return ticketRepository.save(ticket);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override
-    public Optional<Ticket> findById(int id) {
-        return ticketRepository.findById(id);
+    public boolean isSeatAvailable(int sessionId, int rowNumber, int placeNumber) {
+        return !ticketRepository.existsBySessionAndSeat(sessionId, rowNumber, placeNumber);
     }
 
     @Override
-    public Collection<Ticket> findBySessionId(int sessionId) {
+    public Collection<Ticket> findBySession(int sessionId) {
         return ticketRepository.findBySessionId(sessionId);
     }
 
     @Override
-    public boolean deleteById(int id) {
-        return ticketRepository.deleteById(id);
+    public Optional<Ticket> findBySessionAndSeat(int sessionId, int rowNumber, int placeNumber) {
+        return ticketRepository.findBySessionAndSeat(sessionId, rowNumber, placeNumber);
     }
 }

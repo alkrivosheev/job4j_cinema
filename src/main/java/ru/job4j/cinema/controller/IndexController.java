@@ -18,7 +18,7 @@ public class IndexController {
         this.hallService = hallService;
     }
 
-    @GetMapping("/")
+    @GetMapping({"/", "/index"})
     public String index(Model model) {
         model.addAttribute("films", filmService.findAllWithGenre());
         model.addAttribute("halls", hallService.findAll());

@@ -8,9 +8,10 @@ public interface TicketService {
 
     Optional<Ticket> save(Ticket ticket);
 
-    Optional<Ticket> findById(int id);
+    boolean isSeatAvailable(int sessionId, int rowNumber, int placeNumber);
 
-    Collection<Ticket> findBySessionId(int sessionId);
+    Collection<Ticket> findBySession(int sessionId);
 
-    boolean deleteById(int id);
+    Optional<Ticket> findBySessionAndSeat(int sessionId, int rowNumber, int placeNumber);
+
 }
