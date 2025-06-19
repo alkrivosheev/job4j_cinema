@@ -7,7 +7,6 @@
                 <a class="nav-item nav-link active" href="/">Главная</a>
                 <a class="nav-item nav-link" th:href="@{/kinoteka}">Кинотека</a>
                 <a class="nav-item nav-link" th:href="@{/schedule}">Киносеансы</a>
-                <a class="nav-item nav-link" th:href="@{/}">Купить билеты</a>
             </div>
             <div class="d-flex" th:if="${user.fullName == 'Гость'}">
                 <a class="nav-link text-secondary me-3" th:href="@{/users/register}">Регистрация</a>

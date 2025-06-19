@@ -1,11 +1,13 @@
 package ru.job4j.cinema.controller;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.job4j.cinema.dto.FilmSessionDto;
 import ru.job4j.cinema.model.Ticket;
+import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.FilmSessionService;
 import ru.job4j.cinema.service.TicketService;
 import java.time.format.DateTimeFormatter;
@@ -30,16 +32,19 @@ public class TicketController {
             @RequestParam int sessionId,
             @RequestParam int rowNumber,
             @RequestParam int placeNumber,
-            RedirectAttributes redirectAttributes) {
+            RedirectAttributes redirectAttributes,
+            HttpServletRequest request) {
         if (!ticketService.isSeatAvailable(sessionId, rowNumber, placeNumber)) {
             redirectAttributes.addAttribute("rowNumber", rowNumber);
             redirectAttributes.addAttribute("placeNumber", placeNumber);
             return "redirect:/tickets/failure";
         }
+        User user = (User) request.getAttribute("user");
         Ticket ticket = new Ticket();
         ticket.setSessionId(sessionId);
         ticket.setRowNumber(rowNumber);
         ticket.setPlaceNumber(placeNumber);
+        ticket.setUserId(user.getId());
         Optional<Ticket> savedTicket = ticketService.save(ticket);
         if (savedTicket.isEmpty()) {
             redirectAttributes.addAttribute("rowNumber", rowNumber);
