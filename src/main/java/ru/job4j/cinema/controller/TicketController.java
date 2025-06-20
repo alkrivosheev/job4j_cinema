@@ -8,9 +8,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.job4j.cinema.dto.FilmSessionDto;
 import ru.job4j.cinema.model.Ticket;
 import ru.job4j.cinema.model.User;
+import ru.job4j.cinema.service.FilmService;
 import ru.job4j.cinema.service.FilmSessionService;
 import ru.job4j.cinema.service.TicketService;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -20,11 +20,14 @@ public class TicketController {
 
     private final TicketService ticketService;
     private final FilmSessionService filmSessionService;
+    private final FilmService filmService;
 
     public TicketController(TicketService ticketService,
-                            FilmSessionService filmSessionService) {
+                            FilmSessionService filmSessionService,
+                            FilmService filmService) {
         this.ticketService = ticketService;
         this.filmSessionService = filmSessionService;
+        this.filmService = filmService;
     }
 
     @PostMapping("/purchase")
@@ -59,8 +62,7 @@ public class TicketController {
         redirectAttributes.addAttribute("rowNumber", rowNumber);
         redirectAttributes.addAttribute("placeNumber", placeNumber);
         redirectAttributes.addAttribute("filmName", session.getFilmName());
-        redirectAttributes.addAttribute("sessionTime",
-                session.getStartTime().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")));
+        redirectAttributes.addAttribute("sessionTime", filmService.findById(session.getFilmId()).get().getDurationInMinutes());
         redirectAttributes.addAttribute("price", session.getPrice());
         redirectAttributes.addAttribute("hallName", session.getHallName());
         return "redirect:/tickets/success";

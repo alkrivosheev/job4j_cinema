@@ -1,8 +1,15 @@
 package ru.job4j.cinema.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import java.util.Map;
-import java.util.Objects;
 
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Hall {
 
     public static final Map<String, String> COLUMN_MAPPING = Map.of(
@@ -18,74 +25,4 @@ public class Hall {
     private int rowCount;
     private int placeCount;
     private String description;
-
-    public Hall() {
-    }
-
-    public Hall(int id, String name, int rowCount, int placeCount, String description) {
-        this.id = id;
-        this.name = name;
-        this.rowCount = rowCount;
-        this.placeCount = placeCount;
-        this.description = description;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public int getRowCount() {
-        return rowCount;
-    }
-
-    public void setRowCount(int rowCount) {
-        this.rowCount = rowCount;
-    }
-
-    public int getPlaceCount() {
-        return placeCount;
-    }
-
-    public void setPlaceCount(int placeCount) {
-        this.placeCount = placeCount;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
-        Hall hall = (Hall) o;
-        return id == hall.id && rowCount == hall.rowCount
-                && placeCount == hall.placeCount && Objects.equals(name, hall.name)
-                && Objects.equals(description, hall.description);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, rowCount, placeCount, description);
-    }
 }

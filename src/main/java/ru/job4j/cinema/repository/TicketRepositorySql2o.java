@@ -61,7 +61,7 @@ public class TicketRepositorySql2o implements TicketRepository {
             var query = connection.createQuery(
                             "SELECT * FROM tickets WHERE session_id = :sessionId")
                     .addParameter("sessionId", sessionId);
-            return query.executeAndFetch(Ticket.class);
+            return query.setColumnMappings(Ticket.COLUMN_MAPPING).executeAndFetch(Ticket.class);
         }
     }
 
@@ -74,7 +74,7 @@ public class TicketRepositorySql2o implements TicketRepository {
                     .addParameter("sessionId", sessionId)
                     .addParameter("rowNumber", rowNumber)
                     .addParameter("placeNumber", placeNumber);
-            return Optional.ofNullable(query.executeAndFetchFirst(Ticket.class));
+            return Optional.ofNullable(query.setColumnMappings(Ticket.COLUMN_MAPPING).executeAndFetchFirst(Ticket.class));
         }
     }
 }

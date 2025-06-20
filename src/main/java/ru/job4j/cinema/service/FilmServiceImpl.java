@@ -9,6 +9,7 @@ import ru.job4j.cinema.repository.FileRepository;
 import ru.job4j.cinema.repository.FilmRepository;
 import ru.job4j.cinema.repository.GenreRepository;
 import java.util.Collection;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,6 +37,11 @@ public class FilmServiceImpl implements FilmService {
     @Override
     public Collection<Genre> findAllGenres() {
         return genreRepository.findAll();
+    }
+
+    @Override
+    public Optional<Film> findById(int id) {
+        return filmRepository.findById(id);
     }
 
     private FilmDto convertToDto(Film film) {
