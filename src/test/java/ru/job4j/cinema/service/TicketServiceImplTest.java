@@ -1,0 +1,122 @@
+package ru.job4j.cinema.service;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import ru.job4j.cinema.model.Ticket;
+import ru.job4j.cinema.repository.TicketRepository;
+
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
+class TicketServiceImplTest {
+
+    @Mock
+    private TicketRepository ticketRepository;
+
+    @InjectMocks
+    private TicketServiceImpl ticketService;
+
+    @Test
+    void whenSaveAvailableSeatThenSuccess() {
+        Ticket ticket = new Ticket(0, 1, 5, 10, 100);
+        Ticket savedTicket = new Ticket(1, 1, 5, 10, 100);
+
+        when(ticketRepository.existsBySessionAndSeat(1, 5, 10)).thenReturn(false);
+        when(ticketRepository.save(ticket)).thenReturn(Optional.of(savedTicket));
+
+        Optional<Ticket> result = ticketService.save(ticket);
+
+        assertThat(result).isPresent();
+        assertThat(result.get().getId()).isEqualTo(1);
+        verify(ticketRepository).existsBySessionAndSeat(1, 5, 10);
+        verify(ticketRepository).save(ticket);
+    }
+
+    @Test
+    void whenSaveOccupiedSeatThenEmpty() {
+        Ticket ticket = new Ticket(0, 1, 5, 10, 100);
+
+        when(ticketRepository.existsBySessionAndSeat(1, 5, 10)).thenReturn(true);
+
+        Optional<Ticket> result = ticketService.save(ticket);
+
+        assertThat(result).isEmpty();
+        verify(ticketRepository).existsBySessionAndSeat(1, 5, 10);
+        verify(ticketRepository, never()).save(any());
+    }
+
+    @Test
+    void whenSaveThrowsExceptionThenEmpty() {
+        Ticket ticket = new Ticket(0, 1, 5, 10, 100);
+
+        when(ticketRepository.existsBySessionAndSeat(1, 5, 10)).thenReturn(false);
+        when(ticketRepository.save(ticket)).thenThrow(new RuntimeException("DB error"));
+
+        Optional<Ticket> result = ticketService.save(ticket);
+
+        assertThat(result).isEmpty();
+    }
+
+    @Test
+    void whenCheckAvailableSeatThenTrue() {
+        when(ticketRepository.existsBySessionAndSeat(1, 5, 10)).thenReturn(false);
+
+        boolean result = ticketService.isSeatAvailable(1, 5, 10);
+
+        assertThat(result).isTrue();
+    }
+
+    @Test
+    void whenCheckOccupiedSeatThenFalse() {
+        when(ticketRepository.existsBySessionAndSeat(1, 5, 10)).thenReturn(true);
+
+        boolean result = ticketService.isSeatAvailable(1, 5, 10);
+
+        assertThat(result).isFalse();
+    }
+
+    @Test
+    void whenFindBySessionThenReturnTickets() {
+        Ticket ticket1 = new Ticket(1, 1, 5, 10, 100);
+        Ticket ticket2 = new Ticket(2, 1, 6, 11, 101);
+        List<Ticket> expected = List.of(ticket1, ticket2);
+
+        when(ticketRepository.findBySessionId(1)).thenReturn(expected);
+
+        Collection<Ticket> result = ticketService.findBySession(1);
+
+        assertThat(result).hasSize(2);
+        assertThat(result).containsExactlyInAnyOrderElementsOf(expected);
+    }
+
+    @Test
+    void whenFindBySessionAndSeatExistsThenReturnTicket() {
+        Ticket expected = new Ticket(1, 1, 5, 10, 100);
+
+        when(ticketRepository.findBySessionAndSeat(1, 5, 10))
+                .thenReturn(Optional.of(expected));
+
+        Optional<Ticket> result = ticketService.findBySessionAndSeat(1, 5, 10);
+
+        assertThat(result).isPresent();
+        assertThat(result.get()).isEqualTo(expected);
+    }
+
+    @Test
+    void whenFindBySessionAndSeatNotExistsThenEmpty() {
+        when(ticketRepository.findBySessionAndSeat(1, 5, 10))
+                .thenReturn(Optional.empty());
+
+        Optional<Ticket> result = ticketService.findBySessionAndSeat(1, 5, 10);
+
+        assertThat(result).isEmpty();
+    }
+}
