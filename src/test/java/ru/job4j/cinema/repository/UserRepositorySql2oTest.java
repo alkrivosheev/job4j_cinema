@@ -42,6 +42,12 @@ class UserRepositorySql2oTest {
         }
     }
 
+    /**
+     * Тест проверяет сохранение и последующее получение пользователя.
+     * Ожидается:
+     * - Сохраненный пользователь должен быть найден по email и паролю
+     * - Найденный пользователь должен быть идентичен сохраненному
+     */
     @Test
     public void whenSaveThenGetSame() {
         var user = new User(0, "John Doe", "john@example.com", "password");
@@ -50,6 +56,12 @@ class UserRepositorySql2oTest {
         assertThat(foundUser).usingRecursiveComparison().isEqualTo(savedUser);
     }
 
+    /**
+     * Тест проверяет попытку сохранения пользователя с уже существующим email.
+     * Ожидается:
+     * - Первый пользователь сохраняется успешно
+     * - Попытка сохранить второго пользователя с тем же email возвращает empty Optional
+     */
     @Test
     public void whenSaveDuplicateEmailThenEmptyOptional() {
         var user1 = new User(0, "John Doe", "john@example.com", "password");
@@ -59,6 +71,11 @@ class UserRepositorySql2oTest {
         assertThat(result).isEqualTo(Optional.empty());
     }
 
+    /**
+     * Тест проверяет поиск пользователя по email и паролю.
+     * Ожидается:
+     * - Найденный пользователь должен соответствовать сохраненному
+     */
     @Test
     public void whenFindByEmailAndPasswordThenGetUser() {
         var user = new User(0, "John Doe", "john@example.com", "password");
@@ -67,6 +84,11 @@ class UserRepositorySql2oTest {
         assertThat(foundUser).usingRecursiveComparison().isEqualTo(user);
     }
 
+    /**
+     * Тест проверяет поиск пользователя по неверным email и паролю.
+     * Ожидается:
+     * - Для неверных учетных данных метод должен вернуть empty Optional
+     */
     @Test
     public void whenFindByWrongEmailAndPasswordThenEmptyOptional() {
         var user = new User(0, "John Doe", "john@example.com", "password");
@@ -75,6 +97,11 @@ class UserRepositorySql2oTest {
         assertThat(result).isEqualTo(Optional.empty());
     }
 
+    /**
+     * Тест проверяет поиск пользователя по email.
+     * Ожидается:
+     * - Найденный пользователь должен соответствовать сохраненному
+     */
     @Test
     public void whenFindByEmailThenGetUser() {
         var user = new User(0, "John Doe", "john@example.com", "password");
@@ -83,6 +110,11 @@ class UserRepositorySql2oTest {
         assertThat(foundUser).usingRecursiveComparison().isEqualTo(user);
     }
 
+    /**
+     * Тест проверяет поиск пользователя по несуществующему email.
+     * Ожидается:
+     * - Для несуществующего email метод должен вернуть empty Optional
+     */
     @Test
     public void whenFindByWrongEmailThenEmptyOptional() {
         var user = new User(0, "John Doe", "john@example.com", "password");
@@ -91,6 +123,11 @@ class UserRepositorySql2oTest {
         assertThat(result).isEqualTo(Optional.empty());
     }
 
+    /**
+     * Тест проверяет поиск пользователей в пустой базе данных.
+     * Ожидается:
+     * - Для любых запросов поиска должны возвращаться empty Optional
+     */
     @Test
     public void whenDontSaveThenNothingFound() {
         assertThat(userRepositorySql2o.findByEmail("nonexistent@example.com")).isEqualTo(Optional.empty());

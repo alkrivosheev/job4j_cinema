@@ -23,6 +23,12 @@ class FileServiceImplTest {
     @InjectMocks
     private FileServiceImpl fileService;
 
+    /**
+     * Тест проверяет поиск существующего файла по идентификатору.
+     * Ожидается:
+     * - Сервис должен вернуть Optional с ожидаемым файлом
+     * - Возвращенный файл должен соответствовать мокированному значению
+     */
     @Test
     void whenFindByIdExistsThenReturnFile() {
         File expectedFile = new File(1, "test.jpg", "files/test.jpg");
@@ -35,6 +41,12 @@ class FileServiceImplTest {
                 .contains(expectedFile);
     }
 
+    /**
+     * Тест проверяет поиск несуществующего файла по идентификатору.
+     * Ожидается:
+     * - Сервис должен вернуть пустой Optional
+     * - Репозиторий должен вернуть Optional.empty()
+     */
     @Test
     void whenFindByIdNotExistsThenReturnEmpty() {
         when(fileRepository.findById(999)).thenReturn(Optional.empty());
@@ -44,12 +56,24 @@ class FileServiceImplTest {
         assertThat(actualFile).isEmpty();
     }
 
+    /**
+     * Тест проверяет корректность вызова репозитория.
+     * Ожидается:
+     * - Сервис должен вызвать метод findById репозитория
+     * - Должен быть передан правильный идентификатор файла
+     */
     @Test
     void whenFindByIdThenVerifyRepositoryCall() {
         fileService.findById(1);
         verify(fileRepository).findById(1);
     }
 
+    /**
+     * Тест проверяет корректность работы с разными файлами.
+     * Ожидается:
+     * - Для разных идентификаторов должны возвращаться соответствующие файлы
+     * - Имена файлов должны соответствовать ожидаемым значениям
+     */
     @Test
     void whenFindByIdWithDifferentFilesThenCorrect() {
         File file1 = new File(1, "file1.jpg", "path/to/file1.jpg");

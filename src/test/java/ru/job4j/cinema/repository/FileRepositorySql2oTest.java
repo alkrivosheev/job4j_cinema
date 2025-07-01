@@ -33,6 +33,12 @@ class FileRepositorySql2oTest {
         fileRepository = new FileRepositorySql2o(sql2o);
     }
 
+    /**
+     * Тест проверяет корректность поиска файла по существующему идентификатору.
+     * Ожидается:
+     * - Найденный файл содержит ожидаемое имя "avatar.jpg"
+     * - Путь к файлу соответствует ожидаемому "files/avatar.jpg"
+     */
     @Test
     public void whenFindByIdThenGetFile() {
         var file = fileRepository.findById(1).get();
@@ -40,6 +46,11 @@ class FileRepositorySql2oTest {
         assertThat(file.getPath()).isEqualTo("files/avatar.jpg");
     }
 
+    /**
+     * Тест проверяет обработку случая поиска по несуществующему идентификатору.
+     * Ожидается:
+     * - Результат поиска должен быть пустым (Optional.empty())
+     */
     @Test
     public void whenFindByInvalidIdThenEmpty() {
         var result = fileRepository.findById(21);

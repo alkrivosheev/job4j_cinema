@@ -47,6 +47,13 @@ class HallRepositorySql2oTest {
         }
     }
 
+    /**
+     * Тест проверяет поиск кинозала по существующему идентификатору.
+     * Ожидается:
+     * - Найденный кинозал имеет название "Gold Hall"
+     * - Количество рядов: 6
+     * - Количество мест в ряду: 12
+     */
     @Test
     public void whenFindByIdThenGetHall() {
         var hall = hallRepositorySql2o.findById(4).get();
@@ -55,12 +62,25 @@ class HallRepositorySql2oTest {
         assertThat(hall.getPlaceCount()).isEqualTo(12);
     }
 
+    /**
+     * Тест проверяет поиск по несуществующему идентификатору кинозала.
+     * Ожидается:
+     * - Результат должен быть пустым (Optional.empty())
+     */
     @Test
     public void whenFindByInvalidIdThenEmpty() {
         var result = hallRepositorySql2o.findById(5);
         assertThat(result).isEqualTo(Optional.empty());
     }
 
+    /**
+     * Тест проверяет получение всех кинозалов из базы данных.
+     * Ожидается:
+     * - Общее количество кинозалов: 6 (4 стандартных + 2 тестовых)
+     * - В списке присутствуют добавленные тестовые кинозалы:
+     *   - "Test Hall"
+     *   - "Second Hall"
+     */
     @Test
     public void whenFindAllThenGetAllHalls() {
         try (var connection = sql2o.open()) {

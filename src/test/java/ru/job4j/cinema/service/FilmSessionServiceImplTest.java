@@ -42,6 +42,12 @@ class FilmSessionServiceImplTest {
         return Timestamp.valueOf(ldt);
     }
 
+    /**
+     * Тест проверяет поиск сеанса по ID.
+     * Ожидается:
+     * - Возвращается Optional с ожидаемым сеансом
+     * - Проверяется вызов метода findById репозитория
+     */
     @Test
     void whenFindByIdThenReturnFilmSession() {
         LocalDateTime start = LocalDateTime.now();
@@ -56,6 +62,13 @@ class FilmSessionServiceImplTest {
         verify(filmSessionRepository).findById(1);
     }
 
+    /**
+     * Тест проверяет получение всех сеансов.
+     * Ожидается:
+     * - Возвращается коллекция всех сеансов
+     * - Количество и содержимое сеансов соответствует ожидаемому
+     * - Проверяется вызов метода findAll репозитория
+     */
     @Test
     void whenFindAllThenReturnAllFilmSessions() {
         LocalDateTime now = LocalDateTime.now();
@@ -71,6 +84,12 @@ class FilmSessionServiceImplTest {
         verify(filmSessionRepository).findAll();
     }
 
+    /**
+     * Тест проверяет поиск сеансов по ID фильма.
+     * Ожидается:
+     * - Возвращаются только сеансы для указанного фильма
+     * - Проверяется вызов метода findByFilmId репозитория
+     */
     @Test
     void whenFindByFilmIdThenReturnSessionsForFilm() {
         LocalDateTime now = LocalDateTime.now();
@@ -86,6 +105,16 @@ class FilmSessionServiceImplTest {
         verify(filmSessionRepository).findByFilmId(1);
     }
 
+    /**
+     * Тест проверяет получение всех сеансов с деталями фильма и зала.
+     * Ожидается:
+     * - Возвращается коллекция FilmSessionDto
+     * - Проверяются все поля DTO:
+     *   - Название фильма и зала
+     *   - Длительность сеанса
+     *   - Цена билета
+     *   - Время начала и окончания
+     */
     @Test
     void whenFindAllWithFilmAndHallThenReturnDtoList() {
         LocalDateTime start = LocalDateTime.now();
@@ -111,6 +140,15 @@ class FilmSessionServiceImplTest {
         assertThat(dto.getEndTime()).isEqualTo(end);
     }
 
+    /**
+     * Тест проверяет поиск сеанса по ID с деталями фильма и зала.
+     * Ожидается:
+     * - Возвращается FilmSessionDto с полной информацией:
+     *   - ID, название фильма и зала
+     *   - Форматированная длительность
+     *   - Цена билета
+     *   - Время начала и окончания
+     */
     @Test
     void whenFindByIdWithFilmAndHallThenReturnDto() {
         LocalDateTime start = LocalDateTime.now();
@@ -137,6 +175,12 @@ class FilmSessionServiceImplTest {
         assertThat(dto.getEndTime()).isEqualTo(end);
     }
 
+    /**
+     * Тест проверяет обработку ситуации, когда фильм не найден.
+     * Ожидается:
+     * - Бросается IllegalStateException
+     * - Сообщение об ошибке содержит информацию о ненайденном фильме
+     */
     @Test
     void whenFindByIdWithFilmAndHallFilmNotFoundThenThrowException() {
         LocalDateTime now = LocalDateTime.now();
@@ -150,6 +194,12 @@ class FilmSessionServiceImplTest {
                 .hasMessageContaining("Film not found");
     }
 
+    /**
+     * Тест проверяет обработку ситуации, когда зал не найден.
+     * Ожидается:
+     * - Бросается IllegalStateException
+     * - Сообщение об ошибке содержит информацию о ненайденном зале
+     */
     @Test
     void whenFindByIdWithFilmAndHallHallNotFoundThenThrowException() {
         LocalDateTime now = LocalDateTime.now();

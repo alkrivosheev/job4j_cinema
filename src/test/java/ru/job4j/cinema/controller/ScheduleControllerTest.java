@@ -56,6 +56,14 @@ class ScheduleControllerTest {
         authUser.setPassword("password");
     }
 
+    /**
+     * Тест проверяет отображение расписания сеансов для неавторизованного пользователя.
+     * Ожидается:
+     * - HTTP статус 200 (OK)
+     * - Возвращение view "schedule"
+     * - Наличие атрибута "sessions" в модели
+     * - Список сеансов соответствует ожидаемому
+     */
     @Test
     public void whenGetAllSessionsAsGuestThenReturnSchedulePage() throws Exception {
         when(filmSessionService.findAllWithFilmAndHall()).thenReturn(List.of(sessionDto));
@@ -68,6 +76,14 @@ class ScheduleControllerTest {
                 .andExpect(model().attribute("sessions", List.of(sessionDto)));
     }
 
+    /**
+     * Тест проверяет отображение расписания сеансов для авторизованного пользователя.
+     * Ожидается:
+     * - HTTP статус 200 (OK)
+     * - Возвращение view "schedule"
+     * - Наличие атрибута "sessions" в модели
+     * - Список сеансов соответствует ожидаемому
+     */
     @Test
     public void whenGetAllSessionsAsAuthUserThenReturnSchedulePage() throws Exception {
         when(filmSessionService.findAllWithFilmAndHall()).thenReturn(List.of(sessionDto));
@@ -80,6 +96,17 @@ class ScheduleControllerTest {
                 .andExpect(model().attribute("sessions", List.of(sessionDto)));
     }
 
+    /**
+     * Тест проверяет отображение страницы покупки билета для конкретного сеанса.
+     * Ожидается:
+     * - HTTP статус 200 (OK)
+     * - Возвращение view "ticket-purchase"
+     * - Наличие всех необходимых атрибутов в модели:
+     *   - film_session: информация о сеансе
+     *   - hallRows: количество рядов в зале
+     *   - hallSeats: количество мест в ряду
+     * - Данные соответствуют ожидаемым значениям
+     */
     @Test
     public void whenGetSessionByIdThenReturnTicketPurchasePage() throws Exception {
         int sessionId = 1;
@@ -103,6 +130,13 @@ class ScheduleControllerTest {
                 .andExpect(model().attribute("hallSeats", seats));
     }
 
+    /**
+     * Тест проверяет обработку запроса несуществующего сеанса.
+     * Ожидается:
+     * - HTTP статус 302 (Redirect)
+     * - Редирект на страницу расписания
+     * - Возвращение view "redirect:/schedule"
+     */
     @Test
     public void whenGetNonExistingSessionThenRedirectToSchedule() throws Exception {
         int nonExistingSessionId = 999;

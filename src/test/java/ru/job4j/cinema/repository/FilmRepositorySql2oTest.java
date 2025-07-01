@@ -35,6 +35,14 @@ class FilmRepositorySql2oTest {
         filmRepository = new FilmRepositorySql2o(sql2o);
     }
 
+    /**
+     * Тест проверяет поиск фильма по существующему идентификатору.
+     * Ожидается:
+     * - Найденный фильм имеет корректные атрибуты:
+     *   - Название: "Побег из Шоушенка"
+     *   - Год выпуска: 1994
+     *   - Продолжительность: 142 минуты
+     */
     @Test
     public void whenFindByIdThenGetFilm() {
         var film = filmRepository.findById(1).get();
@@ -43,12 +51,23 @@ class FilmRepositorySql2oTest {
         assertThat(film.getDurationInMinutes()).isEqualTo(142);
     }
 
+    /**
+     * Тест проверяет поиск по несуществующему идентификатору фильма.
+     * Ожидается:
+     * - Результат должен быть пустым (Optional.empty())
+     */
     @Test
     public void whenFindByInvalidIdThenEmpty() {
         var result = filmRepository.findById(999);
         assertThat(result).isEmpty();
     }
 
+    /**
+     * Тест проверяет получение всех фильмов из базы данных.
+     * Ожидается:
+     * - Общее количество фильмов: 8
+     * - В списке присутствуют фильмы с идентификаторами 1, 3 и 8
+     */
     @Test
     public void whenFindAllThenGetAllFilms() {
         Collection<Film> films = filmRepository.findAll();
@@ -57,6 +76,12 @@ class FilmRepositorySql2oTest {
         assertThat(filmIds).contains(1, 3, 8);
     }
 
+    /**
+     * Тест проверяет корректность получения дополнительных атрибутов фильма.
+     * Ожидается:
+     * - Идентификатор жанра: 4
+     * - Минимальный возраст: 18
+     */
     @Test
     public void whenFindByAttributesThenCorrect() {
         var film = filmRepository.findById(2).get();

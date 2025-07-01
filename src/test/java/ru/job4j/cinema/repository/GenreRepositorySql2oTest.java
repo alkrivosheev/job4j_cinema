@@ -50,18 +50,36 @@ class GenreRepositorySql2oTest {
         }
     }
 
+    /**
+     * Тест проверяет поиск жанра по существующему идентификатору.
+     * Ожидается:
+     * - Найденный жанр имеет название "Action"
+     */
     @Test
     public void whenFindByIdThenGetGenre() {
         var genre = genreRepositorySql2o.findById(1).get();
         assertThat(genre.getName()).isEqualTo("Action");
     }
 
+    /**
+     * Тест проверяет поиск по несуществующему идентификатору жанра.
+     * Ожидается:
+     * - Результат должен быть пустым (Optional.empty())
+     */
     @Test
     public void whenFindByInvalidIdThenEmpty() {
         var result = genreRepositorySql2o.findById(11);
         assertThat(result).isEqualTo(Optional.empty());
     }
 
+    /**
+     * Тест проверяет получение всех жанров из базы данных.
+     * Ожидается:
+     * - Общее количество жанров: 10 (8 стандартных + 2 тестовых)
+     * - В списке присутствуют добавленные тестовые жанры:
+     *   - "Test Genre 1"
+     *   - "Test Genre 2"
+     */
     @Test
     public void whenFindAllThenGetAllGenres() {
         Collection<Genre> genres = genreRepositorySql2o.findAll();

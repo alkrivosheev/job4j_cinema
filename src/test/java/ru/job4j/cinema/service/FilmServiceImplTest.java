@@ -36,6 +36,14 @@ class FilmServiceImplTest {
     @InjectMocks
     private FilmServiceImpl filmService;
 
+    /**
+     * Тест проверяет получение всех фильмов с деталями (жанр и файл).
+     * Ожидается:
+     * - Возвращается коллекция FilmDto с правильным количеством элементов
+     * - Названия фильмов соответствуют ожидаемым
+     * - Названия жанров соответствуют ожидаемым
+     * - Имена файлов соответствуют ожидаемым
+     */
     @Test
     void whenFindAllWithGenreThenReturnAllFilmsWithDetails() {
         Film film1 = new Film(1, "Film 1", "Description 1", 2020, 1, 16, 120, 1);
@@ -59,6 +67,14 @@ class FilmServiceImplTest {
         assertThat(result.stream().map(FilmDto::getFileName)).containsExactlyInAnyOrder("file1.jpg", "file2.jpg");
     }
 
+    /**
+     * Тест проверяет фильтрацию фильмов по жанру.
+     * Ожидается:
+     * - Возвращается только один фильм указанного жанра
+     * - Название фильма соответствует ожидаемому
+     * - Название жанра соответствует ожидаемому
+     * - Имя файла соответствует ожидаемому
+     */
     @Test
     void whenFindByGenreIdThenReturnFilteredFilms() {
         Film film1 = new Film(1, "Action Film", "Desc", 2020, 1, 16, 120, 1);
@@ -79,6 +95,13 @@ class FilmServiceImplTest {
         assertThat(dto.getFileName()).isEqualTo("action.jpg");
     }
 
+    /**
+     * Тест проверяет получение всех жанров.
+     * Ожидается:
+     * - Возвращается коллекция всех жанров
+     * - Количество жанров соответствует ожидаемому
+     * - Названия жанров соответствуют ожидаемым
+     */
     @Test
     void whenFindAllGenresThenReturnAllGenres() {
         Genre genre1 = new Genre(1, "Action");
@@ -92,6 +115,12 @@ class FilmServiceImplTest {
         assertThat(result.stream().map(Genre::getName)).containsExactlyInAnyOrder("Action", "Comedy");
     }
 
+    /**
+     * Тест проверяет поиск существующего фильма по ID.
+     * Ожидается:
+     * - Возвращается Optional с фильмом
+     * - Название фильма соответствует ожидаемому
+     */
     @Test
     void whenFindByIdExistsThenReturnFilm() {
         Film film = new Film(1, "Film", "Desc", 2023, 1, 16, 120, 1);
@@ -103,6 +132,11 @@ class FilmServiceImplTest {
         assertThat(result.get().getName()).isEqualTo("Film");
     }
 
+    /**
+     * Тест проверяет поиск несуществующего фильма по ID.
+     * Ожидается:
+     * - Возвращается пустой Optional
+     */
     @Test
     void whenFindByIdNotExistsThenReturnEmpty() {
         when(filmRepository.findById(999)).thenReturn(Optional.empty());
@@ -112,6 +146,12 @@ class FilmServiceImplTest {
         assertThat(result).isEmpty();
     }
 
+    /**
+     * Тест проверяет обработку ситуации, когда жанр не найден.
+     * Ожидается:
+     * - Бросается исключение IllegalStateException
+     * - Сообщение об ошибке содержит информацию о ненайденном жанре
+     */
     @Test
     void whenConvertToDtoGenreNotFoundThenThrowException() {
         Film film = new Film(1, "Film", "Desc", 2023, 999, 16, 120, 1);

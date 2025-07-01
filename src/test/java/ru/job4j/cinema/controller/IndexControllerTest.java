@@ -44,6 +44,19 @@ class IndexControllerTest {
         hall = Hall.builder().name("hall1").build();
     }
 
+    /**
+     * Тест проверяет корректность отображения главной страницы.
+     * Ожидается:
+     * - HTTP статус 200 (OK)
+     * - Возвращение view "index"
+     * - Наличие в модели атрибутов:
+     *   - films: список DTO фильмов с информацией о жанрах
+     *   - halls: список всех залов кинотеатра
+     * - Данные в модели соответствуют ожидаемым значениям
+     * - Сервисы возвращают корректные данные:
+     *   - filmService.findAllWithGenre() возвращает список фильмов
+     *   - hallService.findAll() возвращает список залов
+     */
     @Test
     public void returnOKResponse() throws Exception {
         when(filmService.findAllWithGenre()).thenReturn(List.of(filmDto));

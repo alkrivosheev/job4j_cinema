@@ -24,6 +24,12 @@ class TicketServiceImplTest {
     @InjectMocks
     private TicketServiceImpl ticketService;
 
+    /**
+     * Тест проверяет успешное сохранение билета на свободное место.
+     * Ожидается:
+     * - Возвращается сохраненный билет с присвоенным ID
+     * - Проверяется вызов методов existsBySessionAndSeat и save репозитория
+     */
     @Test
     void whenSaveAvailableSeatThenSuccess() {
         Ticket ticket = new Ticket(0, 1, 5, 10, 100);
@@ -40,6 +46,12 @@ class TicketServiceImplTest {
         verify(ticketRepository).save(ticket);
     }
 
+    /**
+     * Тест проверяет попытку сохранения билета на занятое место.
+     * Ожидается:
+     * - Возвращается пустой Optional
+     * - Метод save репозитория не вызывается
+     */
     @Test
     void whenSaveOccupiedSeatThenEmpty() {
         Ticket ticket = new Ticket(0, 1, 5, 10, 100);
@@ -53,6 +65,11 @@ class TicketServiceImplTest {
         verify(ticketRepository, never()).save(any());
     }
 
+    /**
+     * Тест проверяет обработку исключения при сохранении билета.
+     * Ожидается:
+     * - Возвращается пустой Optional при возникновении исключения
+     */
     @Test
     void whenSaveThrowsExceptionThenEmpty() {
         Ticket ticket = new Ticket(0, 1, 5, 10, 100);
@@ -65,6 +82,11 @@ class TicketServiceImplTest {
         assertThat(result).isEmpty();
     }
 
+    /**
+     * Тест проверяет доступность места.
+     * Ожидается:
+     * - Возвращается true для свободного места
+     */
     @Test
     void whenCheckAvailableSeatThenTrue() {
         when(ticketRepository.existsBySessionAndSeat(1, 5, 10)).thenReturn(false);
@@ -74,6 +96,11 @@ class TicketServiceImplTest {
         assertThat(result).isTrue();
     }
 
+    /**
+     * Тест проверяет занятость места.
+     * Ожидается:
+     * - Возвращается false для занятого места
+     */
     @Test
     void whenCheckOccupiedSeatThenFalse() {
         when(ticketRepository.existsBySessionAndSeat(1, 5, 10)).thenReturn(true);
@@ -83,6 +110,12 @@ class TicketServiceImplTest {
         assertThat(result).isFalse();
     }
 
+    /**
+     * Тест проверяет поиск билетов по сеансу.
+     * Ожидается:
+     * - Возвращается коллекция всех билетов для указанного сеанса
+     * - Количество и содержимое билетов соответствует ожидаемому
+     */
     @Test
     void whenFindBySessionThenReturnTickets() {
         Ticket ticket1 = new Ticket(1, 1, 5, 10, 100);
@@ -97,6 +130,12 @@ class TicketServiceImplTest {
         assertThat(result).containsExactlyInAnyOrderElementsOf(expected);
     }
 
+    /**
+     * Тест проверяет поиск билета по сеансу и месту (существующий билет).
+     * Ожидается:
+     * - Возвращается Optional с найденным билетом
+     * - Билет соответствует ожидаемому
+     */
     @Test
     void whenFindBySessionAndSeatExistsThenReturnTicket() {
         Ticket expected = new Ticket(1, 1, 5, 10, 100);
@@ -110,6 +149,11 @@ class TicketServiceImplTest {
         assertThat(result.get()).isEqualTo(expected);
     }
 
+    /**
+     * Тест проверяет поиск билета по сеансу и месту (несуществующий билет).
+     * Ожидается:
+     * - Возвращается пустой Optional
+     */
     @Test
     void whenFindBySessionAndSeatNotExistsThenEmpty() {
         when(ticketRepository.findBySessionAndSeat(1, 5, 10))

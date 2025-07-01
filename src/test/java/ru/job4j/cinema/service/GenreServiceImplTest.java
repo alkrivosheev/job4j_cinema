@@ -25,6 +25,12 @@ class GenreServiceImplTest {
     @InjectMocks
     private GenreServiceImpl genreService;
 
+    /**
+     * Тест проверяет поиск существующего жанра по ID.
+     * Ожидается:
+     * - Возвращается Optional с ожидаемым жанром
+     * - Проверяется вызов метода findById репозитория
+     */
     @Test
     void whenFindExistingGenreByIdThenReturnGenre() {
         Genre expectedGenre = new Genre(1, "Action");
@@ -38,6 +44,12 @@ class GenreServiceImplTest {
         verify(genreRepository).findById(1);
     }
 
+    /**
+     * Тест проверяет поиск несуществующего жанра по ID.
+     * Ожидается:
+     * - Возвращается пустой Optional
+     * - Проверяется вызов метода findById репозитория
+     */
     @Test
     void whenFindNonExistingGenreByIdThenReturnEmpty() {
         when(genreRepository.findById(999)).thenReturn(Optional.empty());
@@ -48,6 +60,13 @@ class GenreServiceImplTest {
         verify(genreRepository).findById(999);
     }
 
+    /**
+     * Тест проверяет получение всех жанров.
+     * Ожидается:
+     * - Возвращается коллекция всех жанров
+     * - Количество и содержимое жанров соответствует ожидаемому
+     * - Проверяется вызов метода findAll репозитория
+     */
     @Test
     void whenFindAllGenresThenReturnAllGenres() {
         Genre genre1 = new Genre(1, "Action");
@@ -65,6 +84,12 @@ class GenreServiceImplTest {
         verify(genreRepository).findAll();
     }
 
+    /**
+     * Тест проверяет получение жанров при их отсутствии.
+     * Ожидается:
+     * - Возвращается пустая коллекция
+     * - Проверяется вызов метода findAll репозитория
+     */
     @Test
     void whenNoGenresExistThenReturnEmptyCollection() {
         when(genreRepository.findAll()).thenReturn(List.of());

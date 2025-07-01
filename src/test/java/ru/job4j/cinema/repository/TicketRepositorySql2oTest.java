@@ -44,6 +44,12 @@ class TicketRepositorySql2oTest {
         }
     }
 
+    /**
+     * Тест проверяет сохранение и последующее получение билета.
+     * Ожидается:
+     * - Сохраненный билет должен быть найден по сеансу и месту
+     * - Найденный билет должен быть идентичен сохраненному
+     */
     @Test
     public void whenSaveThenGetSame() {
         var ticket = new Ticket(1, 1, 5, 10, 2);
@@ -53,6 +59,12 @@ class TicketRepositorySql2oTest {
         assertThat(foundTicket).usingRecursiveComparison().isEqualTo(savedTicket);
     }
 
+    /**
+     * Тест проверяет попытку сохранения билета на уже занятое место.
+     * Ожидается:
+     * - Первый билет сохраняется успешно
+     * - Попытка сохранить второй билет на то же место возвращает empty Optional
+     */
     @Test
     public void whenSaveDuplicateSeatThenEmptyOptional() {
         var ticket1 = new Ticket(0, 1, 5, 10, 100);
@@ -62,6 +74,11 @@ class TicketRepositorySql2oTest {
         assertThat(result).isEqualTo(Optional.empty());
     }
 
+    /**
+     * Тест проверяет наличие билета по сеансу и месту.
+     * Ожидается:
+     * - После сохранения билета метод existsBySessionAndSeat должен вернуть true
+     */
     @Test
     public void whenExistsBySessionAndSeatThenTrue() {
         var ticket = new Ticket(0, 1, 5, 10, 100);
@@ -71,12 +88,24 @@ class TicketRepositorySql2oTest {
         assertThat(exists).isTrue();
     }
 
+    /**
+     * Тест проверяет отсутствие билета по сеансу и месту.
+     * Ожидается:
+     * - Для несуществующего билета метод existsBySessionAndSeat должен вернуть false
+     */
     @Test
     public void whenNotExistsBySessionAndSeatThenFalse() {
         var exists = ticketRepositorySql2o.existsBySessionAndSeat(1, 5, 10);
         assertThat(exists).isFalse();
     }
 
+    /**
+     * Тест проверяет поиск всех билетов по идентификатору сеанса.
+     * Ожидается:
+     * - Возвращаются только билеты для указанного сеанса
+     * - Количество найденных билетов соответствует ожидаемому
+     * - Найденные билеты соответствуют сохраненным
+     */
     @Test
     public void whenFindBySessionIdThenGetAllTickets() {
         var ticket1 = new Ticket(0, 1, 5, 10, 100);
@@ -94,6 +123,11 @@ class TicketRepositorySql2oTest {
                 .isEqualTo(List.of(ticket1, ticket2));
     }
 
+    /**
+     * Тест проверяет поиск билета по сеансу и месту.
+     * Ожидается:
+     * - Найденный билет должен соответствовать сохраненному
+     */
     @Test
     public void whenFindBySessionAndSeatThenGetTicket() {
         var ticket = new Ticket(0, 1, 5, 10, 100);
@@ -103,16 +137,25 @@ class TicketRepositorySql2oTest {
         assertThat(foundTicket).usingRecursiveComparison().isEqualTo(ticket);
     }
 
+    /**
+     * Тест проверяет поиск несуществующего билета по сеансу и месту.
+     * Ожидается:
+     * - Для несуществующего билета метод должен вернуть empty Optional
+     */
     @Test
     public void whenFindBySessionAndSeatNotFoundThenEmpty() {
         var result = ticketRepositorySql2o.findBySessionAndSeat(1, 5, 10);
         assertThat(result).isEqualTo(Optional.empty());
     }
 
+    /**
+     * Тест проверяет поиск билетов по несуществующему сеансу.
+     * Ожидается:
+     * - Для несуществующего сеанса метод должен вернуть пустой список
+     */
     @Test
     public void whenFindByNonExistingSessionIdThenEmptyCollection() {
         var tickets = ticketRepositorySql2o.findBySessionId(999);
         assertThat(tickets).isEqualTo(List.of());
     }
-
 }

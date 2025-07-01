@@ -43,6 +43,16 @@ class KinotekaControllerTest {
         genre = new Genre(1, "Test Genre");
     }
 
+    /**
+     * Тест проверяет отображение страницы кинотеки без фильтрации по жанру.
+     * Ожидается:
+     * - HTTP статус 200 (OK)
+     * - Возвращение view "kinoteka"
+     * - Наличие атрибутов:
+     *   - films: список всех фильмов
+     *   - genres: список всех жанров
+     * - Данные соответствуют ожидаемым значениям
+     */
     @Test
     public void whenGetKinotekaWithoutGenreThenReturnAllFilms() throws Exception {
         when(filmService.findAllWithGenre()).thenReturn(List.of(filmDto));
@@ -57,6 +67,17 @@ class KinotekaControllerTest {
                 .andExpect(model().attribute("genres", List.of(genre)));
     }
 
+    /**
+     * Тест проверяет отображение страницы кинотеки с фильтрацией по жанру.
+     * Ожидается:
+     * - HTTP статус 200 (OK)
+     * - Возвращение view "kinoteka"
+     * - Наличие атрибутов:
+     *   - films: список фильмов отфильтрованных по указанному жанру
+     *   - genres: список всех жанров
+     * - Данные соответствуют ожидаемым значениям
+     * - Фильтрация происходит по переданному параметру genreId
+     */
     @Test
     public void whenGetKinotekaWithGenreThenReturnFilteredFilms() throws Exception {
         int genreId = 1;

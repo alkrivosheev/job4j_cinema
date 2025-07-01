@@ -24,6 +24,12 @@ class HallServiceImplTest {
     @InjectMocks
     private HallServiceImpl hallService;
 
+    /**
+     * Тест проверяет поиск существующего кинозала по ID.
+     * Ожидается:
+     * - Возвращается Optional с ожидаемым кинозалом
+     * - Найденный кинозал соответствует ожидаемому
+     */
     @Test
     void whenFindByIdExistsThenReturnHall() {
         Hall expectedHall = new Hall(1, "Test Hall", 10, 15, "Description");
@@ -35,6 +41,11 @@ class HallServiceImplTest {
         assertThat(actualHall.get()).isEqualTo(expectedHall);
     }
 
+    /**
+     * Тест проверяет поиск несуществующего кинозала по ID.
+     * Ожидается:
+     * - Возвращается пустой Optional
+     */
     @Test
     void whenFindByIdNotExistsThenReturnEmpty() {
         when(hallRepository.findById(999)).thenReturn(Optional.empty());
@@ -44,6 +55,12 @@ class HallServiceImplTest {
         assertThat(actualHall).isEmpty();
     }
 
+    /**
+     * Тест проверяет получение всех кинозалов.
+     * Ожидается:
+     * - Возвращается коллекция всех кинозалов
+     * - Количество и содержимое кинозалов соответствует ожидаемому
+     */
     @Test
     void whenFindAllThenReturnAllHalls() {
         Hall hall1 = new Hall(1, "Hall 1", 5, 8, "Small hall");
@@ -58,6 +75,11 @@ class HallServiceImplTest {
         assertThat(actualHalls).containsExactlyInAnyOrderElementsOf(expectedHalls);
     }
 
+    /**
+     * Тест проверяет получение кинозалов при их отсутствии.
+     * Ожидается:
+     * - Возвращается пустая коллекция
+     */
     @Test
     void whenFindAllEmptyThenReturnEmptyCollection() {
         when(hallRepository.findAll()).thenReturn(List.of());
