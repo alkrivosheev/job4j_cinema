@@ -14,4 +14,5 @@ public interface TicketService {
 
     Optional<Ticket> findBySessionAndSeat(int sessionId, int rowNumber, int placeNumber);
 
+    Optional<Ticket> findById(int id);
 }

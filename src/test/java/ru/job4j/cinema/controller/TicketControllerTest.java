@@ -160,17 +160,27 @@ class TicketControllerTest {
      */
     @Test
     public void whenShowSuccessPageThenReturnSuccessView() throws Exception {
+        when(ticketService.findById(1)).thenReturn(Optional.of(ticket));
+        when(filmSessionService.findByIdWithFilmAndHall(1)).thenReturn(Optional.of(sessionDto));
+        when(filmService.findById(1)).thenReturn(Optional.of(film));
+
         mvc.perform(get("/tickets/success")
-                        .param("rowNumber", "2")
-                        .param("placeNumber", "3")
-                        .param("filmName", "Test Film")
-                        .param("sessionTime", "120")
-                        .param("price", "500")
-                        .param("hallName", "Test Hall"))
+                        .param("ticketId", "1"))
                 .andExpect(status().isOk())
                 .andExpect(view().name("tickets/success"))
-                .andExpect(model().attributeExists("rowNumber", "placeNumber", "filmName",
-                        "sessionTime", "price", "hallName"));
+                .andExpect(model().attributeExists(
+                        "rowNumber",
+                        "placeNumber",
+                        "filmName",
+                        "sessionTime",
+                        "price",
+                        "hallName"))
+                .andExpect(model().attribute("rowNumber", 2))
+                .andExpect(model().attribute("placeNumber", 3))
+                .andExpect(model().attribute("filmName", "Test Film"))
+                .andExpect(model().attribute("sessionTime", 120))
+                .andExpect(model().attribute("price", 500))
+                .andExpect(model().attribute("hallName", "Test Hall"));
     }
 
     /**

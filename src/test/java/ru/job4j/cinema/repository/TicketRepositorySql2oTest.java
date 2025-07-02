@@ -158,4 +158,38 @@ class TicketRepositorySql2oTest {
         var tickets = ticketRepositorySql2o.findBySessionId(999);
         assertThat(tickets).isEqualTo(List.of());
     }
+
+    /**
+     * Тест проверяет поиск билета по идентификатору.
+     * Ожидается:
+     * - Найденный билет должен соответствовать сохраненному
+     * - Все поля билета должны быть корректно заполнены
+     */
+    @Test
+    public void whenFindByIdThenGetTicket() {
+        var ticket = new Ticket(0, 1, 5, 10, 100);
+        var savedTicket = ticketRepositorySql2o.save(ticket).get();
+        var foundTicket = ticketRepositorySql2o.findById(savedTicket.getId()).get();
+
+        assertThat(foundTicket)
+                .usingRecursiveComparison()
+                .isEqualTo(savedTicket);
+
+        assertThat(foundTicket.getId()).isEqualTo(savedTicket.getId());
+        assertThat(foundTicket.getSessionId()).isEqualTo(1);
+        assertThat(foundTicket.getRowNumber()).isEqualTo(5);
+        assertThat(foundTicket.getPlaceNumber()).isEqualTo(10);
+        assertThat(foundTicket.getUserId()).isEqualTo(100);
+    }
+
+    /**
+     * Тест проверяет поиск несуществующего билета по идентификатору.
+     * Ожидается:
+     * - Для несуществующего ID метод должен вернуть empty Optional
+     */
+    @Test
+    public void whenFindByIdNotFoundThenEmpty() {
+        var result = ticketRepositorySql2o.findById(999);
+        assertThat(result).isEqualTo(Optional.empty());
+    }
 }

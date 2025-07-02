@@ -8,8 +8,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.cinema.model.User;
 import ru.job4j.cinema.service.UserService;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 
 @ThreadSafe
 @Controller
@@ -28,23 +26,12 @@ public class UserController {
 
     @PostMapping("/register")
     public String register(@ModelAttribute User user, Model model) {
-        try {
-            var savedUser = userService.save(user);
-            if (savedUser.isEmpty()) {
-                model.addAttribute("errorMessage", "Пользователь с такой почтой уже существует");
-                return "errors/500";
-            }
-            return "redirect:/index";
-        } catch (Exception exception) {
-            model.addAttribute("errorMessage", exception.getMessage());
-
-            StringWriter sw = new StringWriter();
-            PrintWriter pw = new PrintWriter(sw);
-            exception.printStackTrace(pw);
-            String stackTrace = sw.toString();
-            model.addAttribute("stackTrace", stackTrace);
+        var savedUser = userService.save(user);
+        if (savedUser.isEmpty()) {
+            model.addAttribute("errorMessage", "Пользователь с такой почтой уже существует");
             return "errors/500";
         }
+        return "redirect:/index";
     }
 
     @GetMapping("/login")

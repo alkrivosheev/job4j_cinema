@@ -41,4 +41,9 @@ public class TicketServiceImpl implements TicketService {
     public Optional<Ticket> findBySessionAndSeat(int sessionId, int rowNumber, int placeNumber) {
         return ticketRepository.findBySessionAndSeat(sessionId, rowNumber, placeNumber);
     }
+
+    @Override
+    public Optional<Ticket> findById(int id) {
+        return ticketRepository.findById(id);
+    }
 }

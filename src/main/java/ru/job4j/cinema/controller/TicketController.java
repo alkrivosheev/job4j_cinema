@@ -37,52 +37,45 @@ public class TicketController {
             @RequestParam int placeNumber,
             RedirectAttributes redirectAttributes,
             HttpServletRequest request) {
-        if (!ticketService.isSeatAvailable(sessionId, rowNumber, placeNumber)) {
-            redirectAttributes.addAttribute("rowNumber", rowNumber);
-            redirectAttributes.addAttribute("placeNumber", placeNumber);
-            return "redirect:/tickets/failure";
-        }
+
         User user = (User) request.getAttribute("user");
         Ticket ticket = new Ticket();
         ticket.setSessionId(sessionId);
         ticket.setRowNumber(rowNumber);
         ticket.setPlaceNumber(placeNumber);
         ticket.setUserId(user.getId());
+
         Optional<Ticket> savedTicket = ticketService.save(ticket);
         if (savedTicket.isEmpty()) {
             redirectAttributes.addAttribute("rowNumber", rowNumber);
             redirectAttributes.addAttribute("placeNumber", placeNumber);
             return "redirect:/tickets/failure";
         }
-        Optional<FilmSessionDto> sessionOpt = filmSessionService.findByIdWithFilmAndHall(sessionId);
-        if (sessionOpt.isEmpty()) {
-            return "redirect:/schedule";
-        }
-        FilmSessionDto session = sessionOpt.get();
-        redirectAttributes.addAttribute("rowNumber", rowNumber);
-        redirectAttributes.addAttribute("placeNumber", placeNumber);
-        redirectAttributes.addAttribute("filmName", session.getFilmName());
-        redirectAttributes.addAttribute("sessionTime", filmService.findById(session.getFilmId()).get().getDurationInMinutes());
-        redirectAttributes.addAttribute("price", session.getPrice());
-        redirectAttributes.addAttribute("hallName", session.getHallName());
+
+        // Редирект с ID сохраненного билета
+        redirectAttributes.addAttribute("ticketId", savedTicket.get().getId());
         return "redirect:/tickets/success";
     }
 
     @GetMapping("/success")
     public String showSuccessPage(
-            @RequestParam int rowNumber,
-            @RequestParam int placeNumber,
-            @RequestParam String filmName,
-            @RequestParam String sessionTime,
-            @RequestParam int price,
-            @RequestParam String hallName,
+            @RequestParam int ticketId,
             Model model) {
-        model.addAttribute("rowNumber", rowNumber);
-        model.addAttribute("placeNumber", placeNumber);
-        model.addAttribute("filmName", filmName);
-        model.addAttribute("sessionTime", sessionTime);
-        model.addAttribute("price", price);
-        model.addAttribute("hallName", hallName);
+
+        Ticket ticket = ticketService.findById(ticketId)
+                .orElseThrow(() -> new IllegalArgumentException("Билет не найден"));
+
+        FilmSessionDto session = filmSessionService.findByIdWithFilmAndHall(ticket.getSessionId())
+                .orElseThrow(() -> new IllegalArgumentException("Сеанс не найден"));
+
+        model.addAttribute("rowNumber", ticket.getRowNumber());
+        model.addAttribute("placeNumber", ticket.getPlaceNumber());
+        model.addAttribute("filmName", session.getFilmName());
+        model.addAttribute("sessionTime", filmService.findById(session.getFilmId())
+                .orElseThrow().getDurationInMinutes());
+        model.addAttribute("price", session.getPrice());
+        model.addAttribute("hallName", session.getHallName());
+
         return "tickets/success";
     }
 

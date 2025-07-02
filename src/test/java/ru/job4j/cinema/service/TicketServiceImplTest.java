@@ -163,4 +163,41 @@ class TicketServiceImplTest {
 
         assertThat(result).isEmpty();
     }
+
+    /**
+     * Тест проверяет успешный поиск билета по существующему ID.
+     * Ожидается:
+     * - Возвращается Optional с найденным билетом
+     * - Билет соответствует ожидаемому
+     */
+    @Test
+    void whenFindByIdExistsThenReturnTicket() {
+        Ticket expected = new Ticket(1, 1, 5, 10, 100);
+
+        when(ticketRepository.findById(1))
+                .thenReturn(Optional.of(expected));
+
+        Optional<Ticket> result = ticketService.findById(1);
+
+        assertThat(result)
+                .isPresent()
+                .contains(expected);
+        verify(ticketRepository).findById(1);
+    }
+
+    /**
+     * Тест проверяет поиск билета по несуществующему ID.
+     * Ожидается:
+     * - Возвращается пустой Optional
+     */
+    @Test
+    void whenFindByIdNotExistsThenEmpty() {
+        when(ticketRepository.findById(999))
+                .thenReturn(Optional.empty());
+
+        Optional<Ticket> result = ticketService.findById(999);
+
+        assertThat(result).isEmpty();
+        verify(ticketRepository).findById(999);
+    }
 }
